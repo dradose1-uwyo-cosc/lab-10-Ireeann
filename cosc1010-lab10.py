@@ -1,8 +1,8 @@
-# Your Name Here
+# Ireeann Anderson
 # UWYO COSC 1010
-# Submission Date
-# Lab XX
-# Lab Section: 
+# Submission Date 11/26/24
+# Lab 10
+# Lab Section: 16
 # Sources, people worked with, help given to: 
 # your
 # comments
@@ -43,3 +43,45 @@ def get_hash(to_hash):
 # Hash each individual password and compare it against the stored hash.
 # - When you find the match, print the plaintext version of the password.
 # - End your loop.
+
+from hashlib import sha256
+from pathlib import Path
+
+def get_hash(to_hash):
+    """Generate the SHA-256 hash of a string."""
+    return sha256(to_hash.encode('utf-8')).hexdigest().upper()
+
+def crack_password():
+   
+    try:
+        with open('hash', 'r') as hash_file:
+            target_hash = hash_file.read().strip()  
+    except FileNotFoundError:
+        print("Error: The 'hash' file could not be found.")
+        return
+    except Exception as e:
+        print(f"An unexpected error occurred while reading 'hash': {e}")
+        return
+    
+    try:
+        with open('rockyou.txt', 'r') as password_file:
+            passwords = password_file.readlines()
+    except FileNotFoundError:
+        print("Error: The 'rockyou.txt' file could not be found.")
+        return
+    except Exception as e:
+        print(f"An unexpected error occurred while reading 'rockyou.txt': {e}")
+        return
+    else:
+        print("Password file loaded successfully!")
+
+    for password in passwords:
+        password = password.strip()  
+        hashed_password = get_hash(password)  
+        if hashed_password == target_hash:  
+            print(f"Password found: {password}")
+            return  
+    
+    print("No matching password found.")
+
+crack_password()
